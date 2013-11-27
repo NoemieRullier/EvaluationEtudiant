@@ -1,5 +1,5 @@
 /* EvaluationEtudiant
- * Author: 
+ * Author: FAGNIEZ Florian, GOHIER Brian et RULLIER Noemie
  * Creation date: 25/11/2013
  */
 MACHINE
