@@ -1,0 +1,84 @@
+﻿THEORY ProofList IS
+  _f(1) & _f(14) & _f(50) & addGroupe.1,(_f(27) => _f(51));
+  _f(1) & _f(14) & _f(47) & addProjet.2,(_f(22) => _f(49));
+  _f(1) & _f(14) & _f(47) & addProjet.1,(_f(44) => _f(48));
+  _f(1) & _f(14) & _f(43) & addModule.2,(_f(16) => _f(46));
+  _f(1) & _f(14) & _f(43) & addModule.1,(_f(44) => _f(45));
+  _f(1) & _f(14) & _f(40) & delEtuGroupe.1,(_f(41) => _f(42));
+  _f(1) & _f(14) & _f(35) & delEtuProjet.2,(_f(38) & _f(33) => _f(39));
+  _f(1) & _f(14) & _f(35) & delEtuProjet.1,(_f(36) => _f(37));
+  _f(1) & _f(14) & _f(29) & delEtuModule.2,(_f(32) & _f(33) => _f(34));
+  _f(1) & _f(14) & _f(29) & delEtuModule.1,(_f(30) => _f(31));
+  _f(1) & _f(14) & _f(26) & addEtuGroupe.1,(_f(27) => _f(28));
+  _f(1) & _f(14) & _f(21) & addEtuProjet.2,(_f(24) & _f(19) => _f(25));
+  _f(1) & _f(14) & _f(21) & addEtuProjet.1,(_f(22) => _f(23));
+  _f(1) & _f(14) & _f(15) & addEtuModule.2,(_f(18) & _f(19) => _f(20));
+  _f(1) & _f(14) & _f(15) & addEtuModule.1,(_f(16) => _f(17));
+  _f(1) & Initialisation.6,(_f(12) => _f(13));
+  _f(1) & Initialisation.5,(_f(10) => _f(11));
+  _f(1) & Initialisation.4,(_f(8) => _f(9));
+  _f(1) & Initialisation.3,(_f(6) => _f(7));
+  _f(1) & Initialisation.2,(_f(4) => _f(5));
+  _f(1) & Initialisation.1,(_f(2) => _f(3))
+END
+&
+THEORY Formulas IS
+  ("`Component properties'" & MODULES: FIN(INTEGER) & not(MODULES = {}) & ETUDIANTS: FIN(INTEGER) & not(ETUDIANTS = {}) & GROUPES: FIN(INTEGER) & not(GROUPES = {}) & PROJETS: FIN(INTEGER) & not(PROJETS = {}));
+  "`Check that the invariant (lesModules <: MODULES) is established by the initialisation - ref 3.3'";
+  ({}: POW(MODULES));
+  "`Check that the invariant (lesEtudiants <: ETUDIANTS) is established by the initialisation - ref 3.3'";
+  ({}: POW(ETUDIANTS));
+  "`Check that the invariant (lesGroupes <: GROUPES) is established by the initialisation - ref 3.3'";
+  ({}: POW(GROUPES));
+  "`Check that the invariant (lesProjets <: PROJETS) is established by the initialisation - ref 3.3'";
+  ({}: POW(PROJETS));
+  "`Check that the invariant (appartientAuxGroupes: lesEtudiants <-> lesGroupes) is established by the initialisation - ref 3.3'";
+  ({}: {} <-> {});
+  "`Check that the invariant (specifiqueAuModule: lesProjets +-> lesModules) is established by the initialisation - ref 3.3'";
+  ({}: {} +-> {});
+  ("`Component invariant'" & lesModules: POW(MODULES) & lesEtudiants: POW(ETUDIANTS) & lesGroupes: POW(GROUPES) & lesProjets: POW(PROJETS) & appartientAuxGroupes: lesEtudiants <-> lesGroupes & specifiqueAuModule: lesProjets +-> lesModules & participeAuxProjets: lesEtudiants +-> lesProjets & participeAuxModules: lesEtudiants +-> lesModules & !ee.(ee: ETUDIANTS & ee: dom(participeAuxProjets) & ee: dom(participeAuxModules) => card(participeAuxProjets[{ee}]) = card(participeAuxModules[{ee}])));
+  ("`addEtuModule preconditions in this component'" & ee: ETUDIANTS & ee: lesEtudiants & mm: MODULES & mm: lesModules & not(ee: dom(participeAuxModules)));
+  "`Check that the invariant (participeAuxModules: lesEtudiants +-> lesModules) is preserved by the operation - ref 3.4'";
+  (participeAuxModules<+{ee|->mm}: lesEtudiants +-> lesModules);
+  ("`Local hypotheses'" & ee$0: ETUDIANTS & ee$0: dom(participeAuxProjets) & ee$0: dom(participeAuxModules<+{ee|->mm}));
+  "`Check that the invariant (!ee.(ee: ETUDIANTS & ee: dom(participeAuxProjets) & ee: dom(participeAuxModules) => card(participeAuxProjets[{ee}]) = card(participeAuxModules[{ee}]))) is preserved by the operation - ref 3.4'";
+  (card(participeAuxProjets[{ee$0}]) = card((participeAuxModules<+{ee|->mm})[{ee$0}]));
+  ("`addEtuProjet preconditions in this component'" & ee: ETUDIANTS & ee: lesEtudiants & pp: PROJETS & pp: lesProjets & not(ee: dom(participeAuxProjets)));
+  "`Check that the invariant (participeAuxProjets: lesEtudiants +-> lesProjets) is preserved by the operation - ref 3.4'";
+  (participeAuxProjets<+{ee|->pp}: lesEtudiants +-> lesProjets);
+  ("`Local hypotheses'" & ee$0: ETUDIANTS & ee$0: dom(participeAuxProjets<+{ee|->pp}) & ee$0: dom(participeAuxModules));
+  (card((participeAuxProjets<+{ee|->pp})[{ee$0}]) = card(participeAuxModules[{ee$0}]));
+  ("`addEtuGroupe preconditions in this component'" & ee: ETUDIANTS & ee: lesEtudiants & gg: GROUPES & gg: lesGroupes & not(ee: dom(appartientAuxGroupes)));
+  "`Check that the invariant (appartientAuxGroupes: lesEtudiants <-> lesGroupes) is preserved by the operation - ref 3.4'";
+  (appartientAuxGroupes<+{ee|->gg}: lesEtudiants <-> lesGroupes);
+  ("`delEtuModule preconditions in this component'" & ee: ETUDIANTS & ee: lesEtudiants & mm: MODULES & mm: lesModules & ee: dom(participeAuxModules));
+  "`Check that the invariant (participeAuxModules: lesEtudiants +-> lesModules) is preserved by the operation - ref 3.4'";
+  (participeAuxModules-{ee|->mm}: lesEtudiants +-> lesModules);
+  ("`Local hypotheses'" & ee$0: ETUDIANTS & ee$0: dom(participeAuxProjets) & ee$0: dom(participeAuxModules-{ee|->mm}));
+  "`Check that the invariant (!ee.(ee: ETUDIANTS & ee: dom(participeAuxProjets) & ee: dom(participeAuxModules) => card(participeAuxProjets[{ee}]) = card(participeAuxModules[{ee}]))) is preserved by the operation - ref 3.4'";
+  (card(participeAuxProjets[{ee$0}]) = card((participeAuxModules-{ee|->mm})[{ee$0}]));
+  ("`delEtuProjet preconditions in this component'" & ee: ETUDIANTS & ee: lesEtudiants & pp: PROJETS & pp: lesProjets & ee: dom(participeAuxProjets));
+  "`Check that the invariant (participeAuxProjets: lesEtudiants +-> lesProjets) is preserved by the operation - ref 3.4'";
+  (participeAuxProjets-{ee|->pp}: lesEtudiants +-> lesProjets);
+  ("`Local hypotheses'" & ee$0: ETUDIANTS & ee$0: dom(participeAuxProjets-{ee|->pp}) & ee$0: dom(participeAuxModules));
+  (card((participeAuxProjets-{ee|->pp})[{ee$0}]) = card(participeAuxModules[{ee$0}]));
+  ("`delEtuGroupe preconditions in this component'" & ee: ETUDIANTS & ee: lesEtudiants & gg: GROUPES & gg: lesGroupes & ee: dom(appartientAuxGroupes));
+  "`Check that the invariant (appartientAuxGroupes: lesEtudiants <-> lesGroupes) is preserved by the operation - ref 3.4'";
+  (appartientAuxGroupes-{ee|->gg}: lesEtudiants <-> lesGroupes);
+  ("`addModule preconditions in this component'" & mm: MODULES & not(mm: lesModules));
+  "`Check that the invariant (specifiqueAuModule: lesProjets +-> lesModules) is preserved by the operation - ref 3.4'";
+  (specifiqueAuModule: lesProjets +-> lesModules\/{mm});
+  (participeAuxModules: lesEtudiants +-> lesModules\/{mm});
+  ("`addProjet preconditions in this component'" & pp: PROJETS & not(pp: lesProjets));
+  (specifiqueAuModule: lesProjets\/{pp} +-> lesModules);
+  (participeAuxProjets: lesEtudiants +-> lesProjets\/{pp});
+  ("`addGroupe preconditions in this component'" & gg: GROUPES & not(gg: lesGroupes));
+  (appartientAuxGroupes: lesEtudiants <-> lesGroupes\/{gg})
+END
+&
+THEORY EnumerateX 
+END
+&
+THEORY Version IS
+  POVersion("V4.0-29507")(CLT == "V4.0-31779")(genOPO == KO, genDivergencePO == KO, local_op == OK)
+END
