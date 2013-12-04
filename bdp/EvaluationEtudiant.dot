@@ -1,4 +1,4 @@
 digraph {
-EvaluationEtudiant [ label=" EvaluationEtudiant " shape= box ]
+EvaluationEtudiant_r [ label=" EvaluationEtudiant\nEvaluationEtudiant_r " shape= box ]
 
 }

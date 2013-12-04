@@ -1,5 +1,5 @@
 ﻿/* EvaluationEtudiant
- * Author: 
+ * Author: FAGNIEZ Florian, GOHIER Brian et RULLIER Noemie
  * Creation date: 25/11/2013
  */
 MACHINE
@@ -20,6 +20,7 @@ ABSTRACT_VARIABLES
     , specifiqueAuModule
     , participeAuxProjets
     , participeAuxModules
+    , participeAuxGroupesModules
 
 INVARIANT
     lesModules <: MODULES
@@ -31,9 +32,11 @@ INVARIANT
     // Chaque projet appartient a un module
     & specifiqueAuModule : lesProjets +-> lesModules
     // Les peuvent participer a des projets
-    & participeAuxProjets : lesEtudiants +-> lesProjets
+    & participeAuxProjets : lesEtudiants <-> lesProjets
     // Les etudiants peuvent appartenir a des modules
-    & participeAuxModules : lesEtudiants +-> lesModules
+    & participeAuxModules : lesEtudiants <-> lesModules
+    // Les etudiants peuvent appartenir a un seul groupe par module
+    & participeAuxGroupesModules : lesEtudiants +-> lesModules * lesGroupes
     // Pour chaque etudiant le nombre de projet auxquels il participe
     // doit etre egal au nombre de module auxquels il est inscrit
     & ! ee . ( ( ee : ETUDIANTS &
@@ -52,6 +55,7 @@ INITIALISATION
     || specifiqueAuModule := {}
     || participeAuxProjets := {}
     || participeAuxModules := {}
+    || participeAuxGroupesModules := {}
 
 
 OPERATIONS
@@ -60,15 +64,18 @@ OPERATIONS
  *      QUESTION a      *
  ************************/
 
-    addEtuModule ( ee , mm ) =
+    addEtuModule ( ee , mm , pp ) =
         PRE
             ee : ETUDIANTS
             & ee : lesEtudiants
             & mm : MODULES
             & mm : lesModules
-            & ee /: dom ( participeAuxModules )
+            & pp : PROJETS
+            & pp : lesProjets
+            & ee |-> mm /: participeAuxModules
         THEN
-            participeAuxModules ( ee ) := mm
+            participeAuxModules := participeAuxModules \/ { ( ee |-> mm ) }
+            || participeAuxProjets := participeAuxProjets \/ { ( ee |-> pp ) }
         END ;
 
     addEtuProjet ( ee , pp ) =
@@ -77,9 +84,15 @@ OPERATIONS
             & ee : lesEtudiants
             & pp : PROJETS
             & pp : lesProjets
-            & ee /: dom ( participeAuxProjets )
+            & ee |-> pp /: participeAuxProjets
         THEN
-            participeAuxProjets ( ee ) := pp
+            ANY mm WHERE
+                mm : MODULES
+                & mm = specifiqueAuModule ( pp )
+            THEN
+            participeAuxProjets := participeAuxProjets \/ { ( ee |-> pp ) }
+            || participeAuxModules := participeAuxModules \/ { ( ee |-> mm ) }
+            END
         END ;
 
     addEtuGroupe ( ee , gg ) =
@@ -90,18 +103,21 @@ OPERATIONS
             & gg : lesGroupes
             & ee /: dom ( appartientAuxGroupes )
         THEN
-            appartientAuxGroupes ( ee ) := gg
+            appartientAuxGroupes := appartientAuxGroupes \/ { ( ee |-> gg ) }
         END ;
 
-    delEtuModule ( ee , mm ) =
+    delEtuModule ( ee , mm , pp ) =
         PRE
             ee : ETUDIANTS
             & ee : lesEtudiants
             & mm : MODULES
             & mm : lesModules
+            & pp : PROJETS
+            & pp : lesProjets
             & ee : dom ( participeAuxModules )
         THEN
             participeAuxModules := participeAuxModules - { ( ee |-> mm ) }
+            || participeAuxProjets := participeAuxProjets - { ( ee |-> pp ) }
         END ;
 
     delEtuProjet ( ee , pp ) =
@@ -111,8 +127,16 @@ OPERATIONS
             & pp : PROJETS
             & pp : lesProjets
             & ee : dom ( participeAuxProjets )
+            & ee : dom ( participeAuxModules )
         THEN
-            participeAuxProjets := participeAuxProjets - { ( ee |-> pp ) }
+            ANY mm WHERE
+                mm : MODULES
+                & mm : lesModules
+                & mm = specifiqueAuModule ( pp )
+            THEN
+                participeAuxProjets := participeAuxProjets - { ( ee |-> pp ) }
+                || participeAuxModules := participeAuxModules - { ( ee |-> mm ) }
+            END
         END ;
 
     delEtuGroupe ( ee , gg ) =
@@ -164,7 +188,8 @@ OPERATIONS
             ee : ETUDIANTS
             & ee : lesEtudiants
         THEN
-            list := appartientAuxGroupes [ { ee } ]
+//            list := appartientAuxGroupes[{ee}]
+         list := participeAuxGroupesModules [ { ee } ]
         END ;
 
 /************************
@@ -183,8 +208,8 @@ OPERATIONS
 /************************
  *      QUESTION e      *
  ************************/
-        // une operation qui donne les etudiants qui participent a plus de n groupes differents.
-    list <-- EtuParticipePlusNGroupesDiff ( nbGroup ) =
+
+    list <-- EssaiEtuParticipePlusNGroupesDiff ( nbGroup ) =
         PRE
             nbGroup : NAT
         THEN
@@ -195,6 +220,5 @@ OPERATIONS
                 list := coupleEtuNbpj |> { ii | ii : NAT & ii > nbGroup }
             END
         END
-        //card(listeGroupeParEtu(ee))
 
 END

@@ -1,0 +1,145 @@
+REFINEMENT
+   EvaluationEtudiant_r
+REFINES
+   EvaluationEtudiant
+
+ABSTRACT_VARIABLES
+   lesModules ,
+   lesEtudiants ,
+   lesGroupes ,
+   lesProjets ,
+   appartientAuxGroupes ,
+   specifiqueAuModule ,
+   participeAuxProjets ,
+   participeAuxModules ,
+   participeAuxGroupesModules
+
+INITIALISATION
+   lesModules := {} ||
+   lesEtudiants := {} ||
+   lesGroupes := {} ||
+   lesProjets := {} ||
+   appartientAuxGroupes := {} ||
+   specifiqueAuModule := {} ||
+   participeAuxProjets := {} ||
+   participeAuxModules := {} ||
+   participeAuxGroupesModules := {}
+
+OPERATIONS
+   addEtuModule ( ee , mm , pp ) =
+   PRE
+       ee : ETUDIANTS & ee : lesEtudiants & mm : MODULES & mm : lesModules & pp : PROJETS & pp : lesProjets & ee |-> mm /: participeAuxModules
+   THEN
+       participeAuxModules := participeAuxModules \/ { ( ee |-> mm ) } ||
+       participeAuxProjets := participeAuxProjets \/ { ( ee |-> pp ) }
+   END
+   ;
+
+   addEtuProjet ( ee , pp ) =
+   PRE
+       ee : ETUDIANTS & ee : lesEtudiants & pp : PROJETS & pp : lesProjets & ee |-> pp /: participeAuxProjets
+   THEN
+       ANY mm
+       WHERE
+           mm : MODULES & mm = specifiqueAuModule ( pp )
+       THEN
+           participeAuxProjets := participeAuxProjets \/ { ( ee |-> pp ) } ||
+           participeAuxModules := participeAuxModules \/ { ( ee |-> mm ) }
+       END
+   END
+   ;
+
+   addEtuGroupe ( ee , gg ) =
+   PRE
+       ee : ETUDIANTS & ee : lesEtudiants & gg : GROUPES & gg : lesGroupes & ee /: dom ( appartientAuxGroupes )
+   THEN
+       appartientAuxGroupes := appartientAuxGroupes \/ { ( ee |-> gg ) }
+   END
+   ;
+
+   delEtuModule ( ee , mm , pp ) =
+   PRE
+       ee : ETUDIANTS & ee : lesEtudiants & mm : MODULES & mm : lesModules & pp : PROJETS & pp : lesProjets & ee : dom ( participeAuxModules )
+   THEN
+       participeAuxModules := participeAuxModules - { ( ee |-> mm ) } ||
+       participeAuxProjets := participeAuxProjets - { ( ee |-> pp ) }
+   END
+   ;
+
+   delEtuProjet ( ee , pp ) =
+   PRE
+       ee : ETUDIANTS & ee : lesEtudiants & pp : PROJETS & pp : lesProjets & ee : dom ( participeAuxProjets ) & ee : dom ( participeAuxModules )
+   THEN
+       ANY mm
+       WHERE
+           mm : MODULES & mm : lesModules & mm = specifiqueAuModule ( pp )
+       THEN
+           participeAuxProjets := participeAuxProjets - { ( ee |-> pp ) } ||
+           participeAuxModules := participeAuxModules - { ( ee |-> mm ) }
+       END
+   END
+   ;
+
+   delEtuGroupe ( ee , gg ) =
+   PRE
+       ee : ETUDIANTS & ee : lesEtudiants & gg : GROUPES & gg : lesGroupes & ee : dom ( appartientAuxGroupes )
+   THEN
+       appartientAuxGroupes := appartientAuxGroupes - { ( ee |-> gg ) }
+   END
+   ;
+
+   addModule ( mm ) =
+   PRE
+       mm : MODULES & mm /: lesModules
+   THEN
+       lesModules := lesModules \/ { mm }
+   END
+   ;
+
+   addProjet ( pp ) =
+   PRE
+       pp : PROJETS & pp /: lesProjets
+   THEN
+       lesProjets := lesProjets \/ { pp }
+   END
+   ;
+
+   addGroupe ( gg ) =
+   PRE
+       gg : GROUPES & gg /: lesGroupes
+   THEN
+       lesGroupes := lesGroupes \/ { gg }
+   END
+   ;
+
+   list <-- listeGroupeParEtu ( ee ) =
+   PRE
+       ee : ETUDIANTS & ee : lesEtudiants
+   THEN
+       list := participeAuxGroupesModules [ { ee } ]
+   END
+   ;
+
+   list , nb <-- ProjetsEtNombreParEtu ( ee ) =
+   PRE
+       ee : ETUDIANTS & ee : lesEtudiants
+   THEN
+       list := participeAuxProjets [ { ee } ] ||
+       nb := card ( list )
+   END
+   ;
+
+   list <-- EssaiEtuParticipePlusNGroupesDiff ( nbGroup ) =
+   PRE
+       nbGroup : NAT
+   THEN
+       ANY coupleEtuNbpj
+       WHERE
+           coupleEtuNbpj : lesEtudiants --> NAT & coupleEtuNbpj = { ee , nn | ee : lesEtudiants & nn : NAT & nn = ( card ( appartientAuxGroupes [ { ee } ] ) ) }
+       THEN
+           list := coupleEtuNbpj |> { ii | ii : NAT & ii > nbGroup }
+       END
+   END
+
+
+END
