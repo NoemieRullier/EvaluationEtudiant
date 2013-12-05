@@ -21,6 +21,7 @@ ABSTRACT_VARIABLES
     , participeAuxProjets
     , participeAuxModules
     , participeAuxGroupesModules
+    , possedeNote
 
 INVARIANT
     lesModules <: MODULES
@@ -37,6 +38,8 @@ INVARIANT
     & participeAuxModules : lesEtudiants <-> lesModules
     // Les etudiants peuvent appartenir a un seul groupe par module
     & participeAuxGroupesModules : lesEtudiants +-> lesModules * lesGroupes
+    // Un etudiant possede une note par module
+    & possedeNote : lesEtudiants * lesModules --> NAT
     // Pour chaque etudiant le nombre de projet auxquels il participe
     // doit etre egal au nombre de module auxquels il est inscrit
     & ! ee . ( ( ee : ETUDIANTS &
@@ -56,6 +59,7 @@ INITIALISATION
     || participeAuxProjets := {}
     || participeAuxModules := {}
     || participeAuxGroupesModules := {}
+    || possedeNote := {}
 
 
 OPERATIONS
@@ -219,6 +223,35 @@ OPERATIONS
             THEN
                 list := coupleEtuNbpj |> { ii | ii : NAT & ii > nbGroup }
             END
+        END ;
+
+/************************
+ *    QUESTION Bonus    *
+ ************************/
+
+    addNote ( ee , mm , nn ) =
+        PRE
+            ee : ETUDIANTS
+            & ee : lesEtudiants
+            & mm : MODULES
+            & mm : lesModules
+            & nn : NAT
+        THEN
+            possedeNote ( ee , mm ) := nn
         END
+
+
+  /*  listNoNote <-- noNote =
+            BEGIN
+                ANY ee WHERE
+                ee : ETUDIANTS
+                & ee : lesEtudiants
+                THEN
+                    IF (ee /: dom(dom(possedeNote)))
+                    THEN
+                        listNoNote := listNoNote \/ {ee}
+                    END
+                END
+        END*/
 
 END

@@ -37,9 +37,9 @@ THEORY ListVariablesX IS
   External_Context_List_Variables(Machine(EvaluationEtudiant))==(?);
   Context_List_Variables(Machine(EvaluationEtudiant))==(?);
   Abstract_List_Variables(Machine(EvaluationEtudiant))==(?);
-  Local_List_Variables(Machine(EvaluationEtudiant))==(participeAuxGroupesModules,participeAuxModules,participeAuxProjets,specifiqueAuModule,appartientAuxGroupes,lesProjets,lesGroupes,lesEtudiants,lesModules);
-  List_Variables(Machine(EvaluationEtudiant))==(participeAuxGroupesModules,participeAuxModules,participeAuxProjets,specifiqueAuModule,appartientAuxGroupes,lesProjets,lesGroupes,lesEtudiants,lesModules);
-  External_List_Variables(Machine(EvaluationEtudiant))==(participeAuxGroupesModules,participeAuxModules,participeAuxProjets,specifiqueAuModule,appartientAuxGroupes,lesProjets,lesGroupes,lesEtudiants,lesModules)
+  Local_List_Variables(Machine(EvaluationEtudiant))==(possedeNote,participeAuxGroupesModules,participeAuxModules,participeAuxProjets,specifiqueAuModule,appartientAuxGroupes,lesProjets,lesGroupes,lesEtudiants,lesModules);
+  List_Variables(Machine(EvaluationEtudiant))==(possedeNote,participeAuxGroupesModules,participeAuxModules,participeAuxProjets,specifiqueAuModule,appartientAuxGroupes,lesProjets,lesGroupes,lesEtudiants,lesModules);
+  External_List_Variables(Machine(EvaluationEtudiant))==(possedeNote,participeAuxGroupesModules,participeAuxModules,participeAuxProjets,specifiqueAuModule,appartientAuxGroupes,lesProjets,lesGroupes,lesEtudiants,lesModules)
 END
 &
 THEORY ListVisibleVariablesX IS
@@ -57,7 +57,7 @@ THEORY ListInvariantX IS
   Expanded_List_Invariant(Machine(EvaluationEtudiant))==(btrue);
   Abstract_List_Invariant(Machine(EvaluationEtudiant))==(btrue);
   Context_List_Invariant(Machine(EvaluationEtudiant))==(btrue);
-  List_Invariant(Machine(EvaluationEtudiant))==(lesModules <: MODULES & lesEtudiants <: ETUDIANTS & lesGroupes <: GROUPES & lesProjets <: PROJETS & appartientAuxGroupes: lesEtudiants <-> lesGroupes & specifiqueAuModule: lesProjets +-> lesModules & participeAuxProjets: lesEtudiants <-> lesProjets & participeAuxModules: lesEtudiants <-> lesModules & participeAuxGroupesModules: lesEtudiants +-> lesModules*lesGroupes & !ee.(ee: ETUDIANTS & ee: dom(participeAuxProjets) & ee: dom(participeAuxModules) => card(participeAuxProjets[{ee}]) = card(participeAuxModules[{ee}])))
+  List_Invariant(Machine(EvaluationEtudiant))==(lesModules <: MODULES & lesEtudiants <: ETUDIANTS & lesGroupes <: GROUPES & lesProjets <: PROJETS & appartientAuxGroupes: lesEtudiants <-> lesGroupes & specifiqueAuModule: lesProjets +-> lesModules & participeAuxProjets: lesEtudiants <-> lesProjets & participeAuxModules: lesEtudiants <-> lesModules & participeAuxGroupesModules: lesEtudiants +-> lesModules*lesGroupes & possedeNote: lesEtudiants*lesModules --> NAT & !ee.(ee: ETUDIANTS & ee: dom(participeAuxProjets) & ee: dom(participeAuxModules) => card(participeAuxProjets[{ee}]) = card(participeAuxModules[{ee}])))
 END
 &
 THEORY ListAssertionsX IS
@@ -76,9 +76,9 @@ THEORY ListExclusivityX IS
 END
 &
 THEORY ListInitialisationX IS
-  Expanded_List_Initialisation(Machine(EvaluationEtudiant))==(lesModules,lesEtudiants,lesGroupes,lesProjets,appartientAuxGroupes,specifiqueAuModule,participeAuxProjets,participeAuxModules,participeAuxGroupesModules:={},{},{},{},{},{},{},{},{});
+  Expanded_List_Initialisation(Machine(EvaluationEtudiant))==(lesModules,lesEtudiants,lesGroupes,lesProjets,appartientAuxGroupes,specifiqueAuModule,participeAuxProjets,participeAuxModules,participeAuxGroupesModules,possedeNote:={},{},{},{},{},{},{},{},{},{});
   Context_List_Initialisation(Machine(EvaluationEtudiant))==(skip);
-  List_Initialisation(Machine(EvaluationEtudiant))==(lesModules:={} || lesEtudiants:={} || lesGroupes:={} || lesProjets:={} || appartientAuxGroupes:={} || specifiqueAuModule:={} || participeAuxProjets:={} || participeAuxModules:={} || participeAuxGroupesModules:={})
+  List_Initialisation(Machine(EvaluationEtudiant))==(lesModules:={} || lesEtudiants:={} || lesGroupes:={} || lesProjets:={} || appartientAuxGroupes:={} || specifiqueAuModule:={} || participeAuxProjets:={} || participeAuxModules:={} || participeAuxGroupesModules:={} || possedeNote:={})
 END
 &
 THEORY ListParametersX IS
@@ -93,8 +93,8 @@ THEORY ListConstraintsX IS
 END
 &
 THEORY ListOperationsX IS
-  Internal_List_Operations(Machine(EvaluationEtudiant))==(addEtuModule,addEtuProjet,addEtuGroupe,delEtuModule,delEtuProjet,delEtuGroupe,addModule,addProjet,addGroupe,listeGroupeParEtu,ProjetsEtNombreParEtu,EssaiEtuParticipePlusNGroupesDiff);
-  List_Operations(Machine(EvaluationEtudiant))==(addEtuModule,addEtuProjet,addEtuGroupe,delEtuModule,delEtuProjet,delEtuGroupe,addModule,addProjet,addGroupe,listeGroupeParEtu,ProjetsEtNombreParEtu,EssaiEtuParticipePlusNGroupesDiff)
+  Internal_List_Operations(Machine(EvaluationEtudiant))==(addEtuModule,addEtuProjet,addEtuGroupe,delEtuModule,delEtuProjet,delEtuGroupe,addModule,addProjet,addGroupe,listeGroupeParEtu,ProjetsEtNombreParEtu,EssaiEtuParticipePlusNGroupesDiff,addNote);
+  List_Operations(Machine(EvaluationEtudiant))==(addEtuModule,addEtuProjet,addEtuGroupe,delEtuModule,delEtuProjet,delEtuGroupe,addModule,addProjet,addGroupe,listeGroupeParEtu,ProjetsEtNombreParEtu,EssaiEtuParticipePlusNGroupesDiff,addNote)
 END
 &
 THEORY ListInputX IS
@@ -109,7 +109,8 @@ THEORY ListInputX IS
   List_Input(Machine(EvaluationEtudiant),addGroupe)==(gg);
   List_Input(Machine(EvaluationEtudiant),listeGroupeParEtu)==(ee);
   List_Input(Machine(EvaluationEtudiant),ProjetsEtNombreParEtu)==(ee);
-  List_Input(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(nbGroup)
+  List_Input(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(nbGroup);
+  List_Input(Machine(EvaluationEtudiant),addNote)==(ee,mm,nn)
 END
 &
 THEORY ListOutputX IS
@@ -124,7 +125,8 @@ THEORY ListOutputX IS
   List_Output(Machine(EvaluationEtudiant),addGroupe)==(?);
   List_Output(Machine(EvaluationEtudiant),listeGroupeParEtu)==(list);
   List_Output(Machine(EvaluationEtudiant),ProjetsEtNombreParEtu)==(list,nb);
-  List_Output(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(list)
+  List_Output(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(list);
+  List_Output(Machine(EvaluationEtudiant),addNote)==(?)
 END
 &
 THEORY ListHeaderX IS
@@ -139,7 +141,8 @@ THEORY ListHeaderX IS
   List_Header(Machine(EvaluationEtudiant),addGroupe)==(addGroupe(gg));
   List_Header(Machine(EvaluationEtudiant),listeGroupeParEtu)==(list <-- listeGroupeParEtu(ee));
   List_Header(Machine(EvaluationEtudiant),ProjetsEtNombreParEtu)==(list,nb <-- ProjetsEtNombreParEtu(ee));
-  List_Header(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(list <-- EssaiEtuParticipePlusNGroupesDiff(nbGroup))
+  List_Header(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(list <-- EssaiEtuParticipePlusNGroupesDiff(nbGroup));
+  List_Header(Machine(EvaluationEtudiant),addNote)==(addNote(ee,mm,nn))
 END
 &
 THEORY ListOperationGuardX END
@@ -156,10 +159,12 @@ THEORY ListPreconditionX IS
   List_Precondition(Machine(EvaluationEtudiant),addGroupe)==(gg: GROUPES & gg/:lesGroupes);
   List_Precondition(Machine(EvaluationEtudiant),listeGroupeParEtu)==(ee: ETUDIANTS & ee: lesEtudiants);
   List_Precondition(Machine(EvaluationEtudiant),ProjetsEtNombreParEtu)==(ee: ETUDIANTS & ee: lesEtudiants);
-  List_Precondition(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(nbGroup: NAT)
+  List_Precondition(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(nbGroup: NAT);
+  List_Precondition(Machine(EvaluationEtudiant),addNote)==(ee: ETUDIANTS & ee: lesEtudiants & mm: MODULES & mm: lesModules & nn: NAT)
 END
 &
 THEORY ListSubstitutionX IS
+  Expanded_List_Substitution(Machine(EvaluationEtudiant),addNote)==(ee: ETUDIANTS & ee: lesEtudiants & mm: MODULES & mm: lesModules & nn: NAT | possedeNote:=possedeNote<+{(ee,mm)|->nn});
   Expanded_List_Substitution(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(nbGroup: NAT | @coupleEtuNbpj.(coupleEtuNbpj: lesEtudiants --> NAT & coupleEtuNbpj = {ee,nn | ee: lesEtudiants & nn: NAT & nn = card(appartientAuxGroupes[{ee}])} ==> list:=coupleEtuNbpj|>{ii | ii: NAT & ii>nbGroup}));
   Expanded_List_Substitution(Machine(EvaluationEtudiant),ProjetsEtNombreParEtu)==(ee: ETUDIANTS & ee: lesEtudiants | list,nb:=participeAuxProjets[{ee}],card(list));
   Expanded_List_Substitution(Machine(EvaluationEtudiant),listeGroupeParEtu)==(ee: ETUDIANTS & ee: lesEtudiants | list:=participeAuxGroupesModules[{ee}]);
@@ -183,7 +188,8 @@ THEORY ListSubstitutionX IS
   List_Substitution(Machine(EvaluationEtudiant),addGroupe)==(lesGroupes:=lesGroupes\/{gg});
   List_Substitution(Machine(EvaluationEtudiant),listeGroupeParEtu)==(list:=participeAuxGroupesModules[{ee}]);
   List_Substitution(Machine(EvaluationEtudiant),ProjetsEtNombreParEtu)==(list:=participeAuxProjets[{ee}] || nb:=card(list));
-  List_Substitution(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(ANY coupleEtuNbpj WHERE coupleEtuNbpj: lesEtudiants --> NAT & coupleEtuNbpj = {ee,nn | ee: lesEtudiants & nn: NAT & nn = card(appartientAuxGroupes[{ee}])} THEN list:=coupleEtuNbpj|>{ii | ii: NAT & ii>nbGroup} END)
+  List_Substitution(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(ANY coupleEtuNbpj WHERE coupleEtuNbpj: lesEtudiants --> NAT & coupleEtuNbpj = {ee,nn | ee: lesEtudiants & nn: NAT & nn = card(appartientAuxGroupes[{ee}])} THEN list:=coupleEtuNbpj|>{ii | ii: NAT & ii>nbGroup} END);
+  List_Substitution(Machine(EvaluationEtudiant),addNote)==(possedeNote(ee,mm):=nn)
 END
 &
 THEORY ListConstantsX IS
@@ -237,11 +243,12 @@ THEORY ListANYVarX IS
   List_ANY_Var(Machine(EvaluationEtudiant),addGroupe)==(?);
   List_ANY_Var(Machine(EvaluationEtudiant),listeGroupeParEtu)==(?);
   List_ANY_Var(Machine(EvaluationEtudiant),ProjetsEtNombreParEtu)==(?);
-  List_ANY_Var(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(Var(coupleEtuNbpj) == SetOf(atype(ETUDIANTS,?,?)*btype(INTEGER,0,MAXINT)))
+  List_ANY_Var(Machine(EvaluationEtudiant),EssaiEtuParticipePlusNGroupesDiff)==(Var(coupleEtuNbpj) == SetOf(atype(ETUDIANTS,?,?)*btype(INTEGER,0,MAXINT)));
+  List_ANY_Var(Machine(EvaluationEtudiant),addNote)==(?)
 END
 &
 THEORY ListOfIdsX IS
-  List_Of_Ids(Machine(EvaluationEtudiant)) == (MODULES,ETUDIANTS,GROUPES,PROJETS | ? | participeAuxGroupesModules,participeAuxModules,participeAuxProjets,specifiqueAuModule,appartientAuxGroupes,lesProjets,lesGroupes,lesEtudiants,lesModules | ? | addEtuModule,addEtuProjet,addEtuGroupe,delEtuModule,delEtuProjet,delEtuGroupe,addModule,addProjet,addGroupe,listeGroupeParEtu,ProjetsEtNombreParEtu,EssaiEtuParticipePlusNGroupesDiff | ? | ? | ? | EvaluationEtudiant);
+  List_Of_Ids(Machine(EvaluationEtudiant)) == (MODULES,ETUDIANTS,GROUPES,PROJETS | ? | possedeNote,participeAuxGroupesModules,participeAuxModules,participeAuxProjets,specifiqueAuModule,appartientAuxGroupes,lesProjets,lesGroupes,lesEtudiants,lesModules | ? | addEtuModule,addEtuProjet,addEtuGroupe,delEtuModule,delEtuProjet,delEtuGroupe,addModule,addProjet,addGroupe,listeGroupeParEtu,ProjetsEtNombreParEtu,EssaiEtuParticipePlusNGroupesDiff,addNote | ? | ? | ? | EvaluationEtudiant);
   List_Of_HiddenCst_Ids(Machine(EvaluationEtudiant)) == (? | ?);
   List_Of_VisibleCst_Ids(Machine(EvaluationEtudiant)) == (?);
   List_Of_VisibleVar_Ids(Machine(EvaluationEtudiant)) == (? | ?);
@@ -253,11 +260,11 @@ THEORY SetsEnvX IS
 END
 &
 THEORY VariablesEnvX IS
-  Variables(Machine(EvaluationEtudiant)) == (Type(participeAuxGroupesModules) == Mvl(SetOf(atype(ETUDIANTS,?,?)*(atype(MODULES,?,?)*atype(GROUPES,?,?))));Type(participeAuxModules) == Mvl(SetOf(atype(ETUDIANTS,?,?)*atype(MODULES,?,?)));Type(participeAuxProjets) == Mvl(SetOf(atype(ETUDIANTS,?,?)*atype(PROJETS,?,?)));Type(specifiqueAuModule) == Mvl(SetOf(atype(PROJETS,?,?)*atype(MODULES,?,?)));Type(appartientAuxGroupes) == Mvl(SetOf(atype(ETUDIANTS,?,?)*atype(GROUPES,?,?)));Type(lesProjets) == Mvl(SetOf(atype(PROJETS,?,?)));Type(lesGroupes) == Mvl(SetOf(atype(GROUPES,?,?)));Type(lesEtudiants) == Mvl(SetOf(atype(ETUDIANTS,?,?)));Type(lesModules) == Mvl(SetOf(atype(MODULES,?,?))))
+  Variables(Machine(EvaluationEtudiant)) == (Type(possedeNote) == Mvl(SetOf(atype(ETUDIANTS,?,?)*atype(MODULES,?,?)*btype(INTEGER,0,MAXINT)));Type(participeAuxGroupesModules) == Mvl(SetOf(atype(ETUDIANTS,?,?)*(atype(MODULES,?,?)*atype(GROUPES,?,?))));Type(participeAuxModules) == Mvl(SetOf(atype(ETUDIANTS,?,?)*atype(MODULES,?,?)));Type(participeAuxProjets) == Mvl(SetOf(atype(ETUDIANTS,?,?)*atype(PROJETS,?,?)));Type(specifiqueAuModule) == Mvl(SetOf(atype(PROJETS,?,?)*atype(MODULES,?,?)));Type(appartientAuxGroupes) == Mvl(SetOf(atype(ETUDIANTS,?,?)*atype(GROUPES,?,?)));Type(lesProjets) == Mvl(SetOf(atype(PROJETS,?,?)));Type(lesGroupes) == Mvl(SetOf(atype(GROUPES,?,?)));Type(lesEtudiants) == Mvl(SetOf(atype(ETUDIANTS,?,?)));Type(lesModules) == Mvl(SetOf(atype(MODULES,?,?))))
 END
 &
 THEORY OperationsEnvX IS
-  Operations(Machine(EvaluationEtudiant)) == (Type(EssaiEtuParticipePlusNGroupesDiff) == Cst(SetOf(atype(ETUDIANTS,?,?)*btype(INTEGER,?,?)),btype(INTEGER,?,?));Type(ProjetsEtNombreParEtu) == Cst(SetOf(atype(PROJETS,?,?))*btype(INTEGER,?,?),atype(ETUDIANTS,?,?));Type(listeGroupeParEtu) == Cst(SetOf(atype(MODULES,?,?)*atype(GROUPES,?,?)),atype(ETUDIANTS,?,?));Type(addGroupe) == Cst(No_type,atype(GROUPES,?,?));Type(addProjet) == Cst(No_type,atype(PROJETS,?,?));Type(addModule) == Cst(No_type,atype(MODULES,?,?));Type(delEtuGroupe) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(GROUPES,?,?));Type(delEtuProjet) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(PROJETS,?,?));Type(delEtuModule) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(MODULES,?,?)*atype(PROJETS,?,?));Type(addEtuGroupe) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(GROUPES,?,?));Type(addEtuProjet) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(PROJETS,?,?));Type(addEtuModule) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(MODULES,?,?)*atype(PROJETS,?,?)));
+  Operations(Machine(EvaluationEtudiant)) == (Type(addNote) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(MODULES,?,?)*btype(INTEGER,?,?));Type(EssaiEtuParticipePlusNGroupesDiff) == Cst(SetOf(atype(ETUDIANTS,?,?)*btype(INTEGER,?,?)),btype(INTEGER,?,?));Type(ProjetsEtNombreParEtu) == Cst(SetOf(atype(PROJETS,?,?))*btype(INTEGER,?,?),atype(ETUDIANTS,?,?));Type(listeGroupeParEtu) == Cst(SetOf(atype(MODULES,?,?)*atype(GROUPES,?,?)),atype(ETUDIANTS,?,?));Type(addGroupe) == Cst(No_type,atype(GROUPES,?,?));Type(addProjet) == Cst(No_type,atype(PROJETS,?,?));Type(addModule) == Cst(No_type,atype(MODULES,?,?));Type(delEtuGroupe) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(GROUPES,?,?));Type(delEtuProjet) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(PROJETS,?,?));Type(delEtuModule) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(MODULES,?,?)*atype(PROJETS,?,?));Type(addEtuGroupe) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(GROUPES,?,?));Type(addEtuProjet) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(PROJETS,?,?));Type(addEtuModule) == Cst(No_type,atype(ETUDIANTS,?,?)*atype(MODULES,?,?)*atype(PROJETS,?,?)));
   Observers(Machine(EvaluationEtudiant)) == (Type(EssaiEtuParticipePlusNGroupesDiff) == Cst(SetOf(atype(ETUDIANTS,?,?)*btype(INTEGER,?,?)),btype(INTEGER,?,?));Type(ProjetsEtNombreParEtu) == Cst(SetOf(atype(PROJETS,?,?))*btype(INTEGER,?,?),atype(ETUDIANTS,?,?));Type(listeGroupeParEtu) == Cst(SetOf(atype(MODULES,?,?)*atype(GROUPES,?,?)),atype(ETUDIANTS,?,?)))
 END
 &

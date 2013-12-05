@@ -237,7 +237,7 @@ OPERATIONS
             & mm : lesModules
             & nn : NAT
         THEN
-            possedeNote := possedeNote \/ {((ee,mm)|->nn)}
+            possedeNote(ee,mm) := nn
         END
         
         

@@ -1,21 +1,24 @@
 ﻿THEORY BalanceX IS
-  EvaluationEtudiant,26,0,0,22,0,0,0;
-  Initialisation,7,0,0,7,0,0,0;
-  addEtuModule,2,0,0,1,0,0,0;
+  EvaluationEtudiant,31,0,0,26,0,0,0;
+  Initialisation,8,0,0,8,0,0,0;
+  addEtuModule,3,0,0,2,0,0,0;
   addEtuProjet,3,0,0,2,0,0,0;
   addEtuGroupe,1,0,0,1,0,0,0;
-  delEtuModule,2,0,0,1,0,0,0;
+  delEtuModule,3,0,0,2,0,0,0;
   delEtuProjet,3,0,0,2,0,0,0;
   delEtuGroupe,1,0,0,1,0,0,0;
-  addModule,3,0,0,3,0,0,0;
+  addModule,4,0,0,4,0,0,0;
   addProjet,2,0,0,2,0,0,0;
   addGroupe,2,0,0,2,0,0,0;
   listeGroupeParEtu,0,0,0,0,0,0,0;
   ProjetsEtNombreParEtu,0,0,0,0,0,0,0;
-  EssaiEtuParticipePlusNGroupesDiff,0,0,0,0,0,0,0
+  EssaiEtuParticipePlusNGroupesDiff,0,0,0,0,0,0,0;
+  addNote,1,0,0,0,0,0,0
 END
 &
 THEORY ProofState IS
+  Unproved;
+  Proved(0);
   Proved(0);
   Proved(0);
   Proved(0);
@@ -30,10 +33,13 @@ THEORY ProofState IS
   Unproved;
   Proved(0);
   Proved(0);
+  Proved(0);
   Unproved;
   Proved(0);
   Proved(0);
   Unproved;
+  Proved(0);
+  Proved(0);
   Proved(0);
   Proved(0);
   Proved(0);
@@ -45,6 +51,8 @@ THEORY ProofState IS
 END
 &
 THEORY MethodList IS
+  ?;
+  pr;
   pr;
   pr;
   pr;
@@ -56,11 +64,14 @@ THEORY MethodList IS
   ?;
   pr;
   pr;
+  ?;
   pr;
   pr;
   pr;
   ?;
   pr;
+  pr;
+  ?;
   pr;
   pr;
   pr;
@@ -74,6 +85,7 @@ THEORY MethodList IS
 END
 &
 THEORY PassList IS
+  Force(0),(?;0;1);
   Force(0),?;
   Force(0),?;
   Force(0),?;
@@ -83,13 +95,17 @@ THEORY PassList IS
   Force(0),?;
   Force(0),?;
   Force(0),?;
+  Force(0),(?;0;1);
+  Force(0),?;
+  Force(0),?;
+  Force(0),(?;0;1);
   Force(0),?;
   Force(0),?;
   Force(0),?;
+  Force(0),(?;0;1);
   Force(0),?;
   Force(0),?;
-  Force(0),?;
-  Force(0),?;
+  Force(0),(?;0;1);
   Force(0),?;
   Force(0),?;
   Force(0),?;
@@ -106,6 +122,6 @@ THEORY ManForms
 END
 &
 THEORY Version IS
-  POVersion("V4.0-29507")(CLT == "V4.0-31779")(genOPO == KO, genDivergencePO == KO, local_op == OK);
+  POVersion("V4.0-29507")(CLT == "V4.0-31779")(genOPO == KO,genDivergencePO == KO,local_op == OK);
   PRVersion("svn")(CLT == "V4.0-31779")
 END
