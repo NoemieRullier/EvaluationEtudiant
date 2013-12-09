@@ -245,7 +245,7 @@ OPERATIONS
             BEGIN
                 ANY ee WHERE
                 ee : ETUDIANTS
-                & ee : lesEtudiants
+                & ee     : lesEtudiants
                 THEN
                     IF (ee /: dom(dom(possedeNote)))
                     THEN

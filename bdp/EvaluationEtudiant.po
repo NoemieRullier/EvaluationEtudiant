@@ -1,6 +1,6 @@
 ﻿THEORY ProofList IS
-  _f(1) & _f(19) & _f(59) & addNote.2,(_f(50) => _f(61));
-  _f(1) & _f(19) & _f(59) & addNote.1,(_f(50) => _f(60));
+  _f(1) & _f(19) & _f(59) & addNote.2,(_f(60) => _f(62));
+  _f(1) & _f(19) & _f(59) & addNote.1,(_f(60) => _f(61));
   _f(1) & _f(19) & _f(56) & addGroupe.2,(_f(48) => _f(58));
   _f(1) & _f(19) & _f(56) & addGroupe.1,(_f(32) => _f(57));
   _f(1) & _f(19) & _f(53) & addProjet.2,(_f(21) => _f(55));
@@ -95,6 +95,7 @@ THEORY Formulas IS
   (appartientAuxGroupes: lesEtudiants <-> lesGroupes\/{gg});
   (participeAuxGroupesModules: lesEtudiants +-> lesModules*(lesGroupes\/{gg}));
   ("`addNote preconditions in this component'" & ee: ETUDIANTS & ee: lesEtudiants & mm: MODULES & mm: lesModules & nn: INTEGER & 0<=nn & nn<=2147483647);
+  "`Check that the invariant (possedeNote: lesEtudiants*lesModules --> NAT) is preserved by the operation - ref 3.4'";
   (possedeNote<+{(ee,mm)|->nn}: lesEtudiants*lesModules +-> NAT);
   (dom(possedeNote<+{(ee,mm)|->nn}) = lesEtudiants*lesModules)
 END
